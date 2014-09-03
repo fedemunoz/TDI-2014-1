@@ -1,4 +1,8 @@
+import com.leapmotion.leap.Finger;
+import com.onformative.leap.LeapMotionP5;
+import de.voidplus.dollar.OneDollar;
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.Robot;
 import java.awt.TextArea;
 import java.sql.Time;
@@ -7,11 +11,8 @@ import java.util.ArrayList;
 import javax.management.timer.Timer;
 
 
-import com.leapmotion.leap.Finger;
-import com.onformative.leap.LeapMotionP5;
-
-import de.voidplus.dollar.OneDollar;
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 
 
@@ -60,8 +61,12 @@ public class HWRCanvas extends PApplet{
 	@Override
 	public void setup()
 	{
-		  size(300,300);
-		  background(250);
+		  size(720,500);
+                  
+		  PImage pimg= loadImage("2.jpg","jpg");
+                  pimg.resize(720, 500);
+                  background(pimg);
+                  
                   templateXY = new ArrayList<Integer>();
                   Grabo = true;
 
@@ -255,7 +260,11 @@ public class HWRCanvas extends PApplet{
 		}
 		
 		clear();
-		background(250);
+                
+                PImage pimg= loadImage("2.jpg","jpg");
+                pimg.resize(720, 500);
+		background(pimg);
+                
 		stroke(30);
 		smooth();  
 		noFill();

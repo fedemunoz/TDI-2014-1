@@ -1,10 +1,4 @@
-import processing.core.PApplet;
-import processing.core.PVector;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import com.leapmotion.leap.Finger;
 
 import com.onformative.leap.LeapMotionP5;
 
@@ -12,53 +6,57 @@ import de.voidplus.dollar.OneDollar;
 
 import java.awt.AWTException;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.TextArea;
-import java.awt.Color;
 import java.awt.Robot;
+import java.awt.TextArea;
 import java.util.ArrayList;
-import com.leapmotion.leap.Finger;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Main extends JFrame{
 	//private PApplet pApp;
 	
-	private int width = 640;
-	private int height = 480;
+	private int width = 1040;
+	private int height = 680;
 	private boolean capsOn = true;
 	
 	private TextArea output;
 	public Main()
 	{
 		setSize(width, height);
-		setBounds(0, 0, width, height);
+		setBounds(170, 25, width, height);
 		// get rid of annoying layout managers
 		setLayout(null);
+                
+                setContentPane(new JLabel(new ImageIcon("fondo.png")));
 		
 		// make the text boxes 
 		output = new TextArea("");  
 		// make output read only and color it back to white 
 		output.setEditable(false); 
-		output.setBackground(Color.white); 
+                output.setBackground(Color.white); 
 
-		output.setBounds(50, 380, width-100, height - 420);
+		output.setBounds(160, height-100, 720, 60);
 		// add text boxes to their containers 
 
 		add(output);
 		
 		HWRCanvas hwrc = new HWRCanvas(this);
 		hwrc.init();
-		hwrc.setBounds(170, 50, 300, 300);
-		add(hwrc);
-		
-		
-		  
-		
+		hwrc.setBounds(160, 50, 720, 500);
+		add(hwrc);						  		
 
 		//pack();
 		setResizable(false);
 		setVisible(true);
-		setTitle("TDI Grupo 1!");
+		setTitle("Gesture Password");
 	}
 	
 	public void detectedA(String gesture, int x, int y, int c_x, int c_y) {

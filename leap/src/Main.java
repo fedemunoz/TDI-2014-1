@@ -7,7 +7,9 @@ import de.voidplus.dollar.OneDollar;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Robot;
@@ -31,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.FontUIResource;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -45,17 +48,20 @@ public class Main extends JFrame{
     private ActionListener guardarGesto;
 	public Main() throws IOException
 	{
-		setSize(width, height);
-		setBounds(170, 25, width, height);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            
+            setSize(width, height);
+            setBounds(170, 25, width, height);
 		// get rid of annoying layout managers
 //		setLayout(null);
-        setContentPane(new JPanel() {
-          BufferedImage img = ImageIO.read(getClass().getResource("fondo.png"));
+            setContentPane(new JPanel() {
+            BufferedImage img = ImageIO.read(getClass().getResource("fondo.png"));
         
-          public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage(img, 0, 0, 1040, 680, this);
-          }
+            public void paintComponent(Graphics g) {
+              super.paintComponent(g);
+              g.drawImage(img, 0, 0, 1040, 680, this);
+            }
+          
         });  
              
 		
@@ -69,16 +75,44 @@ public class Main extends JFrame{
 		// add text boxes to their containers 
 
 //		add(output);
-		
-		final JButton b1 = new JButton("Guardar Gesto");
-                b1.setVisible(true);
+        
+            
+            
+            /* PARA PONER IMAGEN EN BOTON
+            
+                JButton b1 = new JButton(new ImageIcon("java.gif"));
+           
+		*/               
+		final JButton b1 = new JButton("GUARDAR GESTO");
+                b1.setOpaque(false);
+                b1.setContentAreaFilled(false);
+                b1.setBorder(null);
+                b1.setBorderPainted(false);
+                b1.setForeground(Color.white);
+                b1.setCursor(new Cursor(Cursor.HAND_CURSOR));      
                 add(b1);
-                final JButton b2 = new JButton("Chequear Gesto");
-                b2.setVisible(true);
+                b1.setVisible(true);
+                        
+                final JButton b2 = new JButton("CHEQUEAR GESTO");
+                b2.setOpaque(false);
+                b2.setContentAreaFilled(false);
+                b2.setBorder(null);
+                b2.setBorderPainted(false);
+                b2.setForeground(Color.white);
+                b2.setCursor(new Cursor(Cursor.HAND_CURSOR));      
                 add(b2);
-                final JButton b3 = new JButton("Elegir imagen");
+                b2.setVisible(true);
+                
+                final JButton b3 = new JButton("ELEGIR IMAGEN");
+                b3.setOpaque(false);
+                b3.setContentAreaFilled(false);
+                b3.setBorder(null);
+                b3.setBorderPainted(false);
+                b3.setForeground(Color.white);
+                b3.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
                 b3.setVisible(true);
                 add(b3);
+                
                 final HWRCanvas hwrc = new HWRCanvas(this);
                 //final HWRCanvas hwrc2 = new HWRCanvas(this);
                 hwrc.setBounds(160, 50, 720, 500);

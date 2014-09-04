@@ -8,15 +8,29 @@ import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Robot;
 import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import static java.lang.System.out;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -28,35 +42,121 @@ public class Main extends JFrame{
 	private boolean capsOn = true;
 	
 	private TextArea output;
-	public Main()
+    private ActionListener guardarGesto;
+	public Main() throws IOException
 	{
 		setSize(width, height);
 		setBounds(170, 25, width, height);
 		// get rid of annoying layout managers
-		setLayout(null);
-                
-                setContentPane(new JLabel(new ImageIcon("fondo.png")));
+//		setLayout(null);
+        setContentPane(new JPanel() {
+          BufferedImage img = ImageIO.read(getClass().getResource("fondo.png"));
+        
+          public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(img, 0, 0, 1040, 680, this);
+          }
+        });  
+             
 		
 		// make the text boxes 
-		output = new TextArea("");  
-		// make output read only and color it back to white 
-		output.setEditable(false); 
-                output.setBackground(Color.white); 
-
-		output.setBounds(160, height-100, 720, 60);
+//		output = new TextArea("");  
+//		// make output read only and color it back to white 
+//		output.setEditable(false); 
+//                output.setBackground(Color.white); 
+//
+//		output.setBounds(160, height-100, 720, 60);
 		// add text boxes to their containers 
 
-		add(output);
+//		add(output);
 		
-		HWRCanvas hwrc = new HWRCanvas(this);
-		hwrc.init();
-		hwrc.setBounds(160, 50, 720, 500);
-		add(hwrc);						  		
+		final JButton b1 = new JButton("Guardar Gesto");
+                b1.setVisible(true);
+                add(b1);
+                final JButton b2 = new JButton("Chequear Gesto");
+                b2.setVisible(true);
+                add(b2);
+                final JButton b3 = new JButton("Elegir imagen");
+                b3.setVisible(true);
+                add(b3);
+                final HWRCanvas hwrc = new HWRCanvas(this);
+                //final HWRCanvas hwrc2 = new HWRCanvas(this);
+                hwrc.setBounds(160, 50, 720, 500);
+                //hwrc2.setBounds(160, 50, 720, 500);
+                b1.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        //Execute when button is pressed
+                        hwrc.Grabo=true;
+                        hwrc.init();
+                        hwrc.start();
 
+
+
+                        add(hwrc);
+
+                        System.out.println("You clicked the button");
+                    }
+                });
+                b2.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        //Execute when button is pressed
+                         hwrc.Grabo=false;
+                         //hwrc.init();
+                         hwrc.start();
+                         add(hwrc);
+
+
+
+                        System.out.println("You clicked the button chequear");
+                    }
+                });  
+                b3.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        JFileChooser filechooser= new JFileChooser();
+                        FileFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
+                        filechooser.setFileFilter(imageFilter);
+                        filechooser.setDialogTitle("Seleccionar imagen");
+                        filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                        //below codes for select  the file 
+                        int returnval=filechooser.showOpenDialog(null);
+                        
+                        if(returnval==JFileChooser.APPROVE_OPTION)
+                        {
+                            File file = filechooser.getSelectedFile();
+                            BufferedImage bi;
+                            try
+                            {   //display the image in jlabel
+                                bi=ImageIO.read(file);
+                                System.out.println(file.getName());
+                                                                
+                               //BufferedImage bi = getMyImage();
+                                File outputfile = new File("saved.png");
+                                ImageIO.write(bi, "png", outputfile);
+                                //jLabel1.setIcon(new ImageIcon(bi));
+                            }
+                            catch(IOException ev)
+                            {
+
+                            }
+                            //this.pack();
+                        }
+                    }
+                });
+                
+                
+                
+                						  		
+              
 		//pack();
+                 
+                  
 		setResizable(false);
 		setVisible(true);
 		setTitle("Gesture Password");
+                
 	}
 	
 	public void detectedA(String gesture, int x, int y, int c_x, int c_y) {
@@ -353,8 +453,12 @@ public class Main extends JFrame{
 			capsOn = true;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		new Main();
 
 	}
+
+
+        
+        
 }

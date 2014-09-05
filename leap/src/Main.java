@@ -45,7 +45,8 @@ public class Main extends JFrame{
 	private boolean capsOn = true;
 	
 	private TextArea output;
-    private ActionListener guardarGesto;
+        private ActionListener guardarGesto;
+        
 	public Main() throws IOException
 	{
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,15 +55,15 @@ public class Main extends JFrame{
             setBounds(170, 25, width, height);
 		// get rid of annoying layout managers
 //		setLayout(null);
-            setContentPane(new JPanel() {
-            BufferedImage img = ImageIO.read(getClass().getResource("fondo.png"));
-        
-            public void paintComponent(Graphics g) {
-              super.paintComponent(g);
-              g.drawImage(img, 0, 0, 1040, 680, this);
-            }
-          
-        });  
+            JPanel p= new JPanel() {
+                                        BufferedImage img = ImageIO.read(getClass().getResource("fondo.gif"));
+
+                                        public void paintComponent(Graphics g) {
+                                          super.paintComponent(g);
+                                          g.drawImage(img, 0, 0, 1040, 680, this);
+                                        }
+                                    };
+            setContentPane(p);  
              
 		
 		// make the text boxes 
@@ -76,24 +77,9 @@ public class Main extends JFrame{
 
 //		add(output);
         
-            
-            
-            /* PARA PONER IMAGEN EN BOTON
-            
-                JButton b1 = new JButton(new ImageIcon("java.gif"));
-           
-		*/               
-		final JButton b1 = new JButton("GUARDAR GESTO");
-                b1.setOpaque(false);
-                b1.setContentAreaFilled(false);
-                b1.setBorder(null);
-                b1.setBorderPainted(false);
-                b1.setForeground(Color.white);
-                b1.setCursor(new Cursor(Cursor.HAND_CURSOR));      
-                add(b1);
-                b1.setVisible(true);
-                        
-                final JButton b2 = new JButton("CHEQUEAR GESTO");
+                         
+                //final JButton b2 = new JButton("CHEQUEAR GESTO");
+                JButton b2 = new JButton(new ImageIcon("reconocer.png"));
                 b2.setOpaque(false);
                 b2.setContentAreaFilled(false);
                 b2.setBorder(null);
@@ -103,20 +89,32 @@ public class Main extends JFrame{
                 add(b2);
                 b2.setVisible(true);
                 
-                final JButton b3 = new JButton("ELEGIR IMAGEN");
+                //final JButton b1 = new JButton("GUARDAR GESTO");
+                JButton b1 = new JButton(new ImageIcon("guardar.png"));
+                b1.setOpaque(false);
+                b1.setContentAreaFilled(false);
+                b1.setBorder(null);
+                b1.setBorderPainted(false);
+                b1.setForeground(Color.white);
+                b1.setCursor(new Cursor(Cursor.HAND_CURSOR));      
+                add(b1);
+                b1.setVisible(true);
+                
+                //final JButton b3 = new JButton("ELEGIR IMAGEN");
+                JButton b3 = new JButton(new ImageIcon("importar.png"));
                 b3.setOpaque(false);
                 b3.setContentAreaFilled(false);
                 b3.setBorder(null);
                 b3.setBorderPainted(false);
                 b3.setForeground(Color.white);
-                b3.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
-                b3.setVisible(true);
+                b3.setCursor(new Cursor(Cursor.HAND_CURSOR));                 
+                b3.setVisible(true);                
+                b3.setBounds(500, 650, 287, 26);
                 add(b3);
                 
                 final HWRCanvas hwrc = new HWRCanvas(this);
-                //final HWRCanvas hwrc2 = new HWRCanvas(this);
-                hwrc.setBounds(160, 50, 720, 500);
-                //hwrc2.setBounds(160, 50, 720, 500);
+                hwrc.setBounds(160, 75, 720, 500);
+                
                 b1.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e)
                     {
@@ -125,13 +123,12 @@ public class Main extends JFrame{
                         hwrc.init();
                         hwrc.start();
 
-
-
                         add(hwrc);
 
                         System.out.println("You clicked the button");
                     }
                 });
+                
                 b2.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e)
                     {
@@ -141,11 +138,10 @@ public class Main extends JFrame{
                          hwrc.start();
                          add(hwrc);
 
-
-
                         System.out.println("You clicked the button chequear");
                     }
                 });  
+                
                 b3.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e)
                     {
@@ -166,24 +162,18 @@ public class Main extends JFrame{
                                 bi=ImageIO.read(file);
                                 System.out.println(file.getName());
                                                                 
-                               //BufferedImage bi = getMyImage();
                                 File outputfile = new File("saved.png");
                                 ImageIO.write(bi, "png", outputfile);
-                                //jLabel1.setIcon(new ImageIcon(bi));
                             }
                             catch(IOException ev)
                             {
 
                             }
-                            //this.pack();
+                            
                         }
                     }
                 });
                 
-                
-                
-                						  		
-              
 		//pack();
                  
                   

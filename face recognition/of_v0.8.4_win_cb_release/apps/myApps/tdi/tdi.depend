@@ -5338,3 +5338,6 @@
 1411769428 source:c:\users\fede\documents\github\tdi-2014-1\face recognition\of_v0.8.4_win_cb_release\apps\myapps\tdi\src\testapp.cpp
 	"testApp.h"
 
+1412025693 source:c:\users\fede\documents\github\tdi-2014-1\face recognition\of_v0.8.4_win_cb_release\apps\myapps\tdi\src\faceosc.cpp
+	"FaceOsc.h"
+

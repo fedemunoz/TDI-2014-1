@@ -62,23 +62,27 @@ void FaceOsc::addMessage(string address, float data, string joint) {
 	float x=0; float y=0;
 	if(joint=="boca"){
         x= data+2773.77;
-        y= (data*40)+2256.43;
+        y= (data*35)+2256.43;
 	}
 	if(joint=="cejaI"){
-        x= data+2595.68;
-        y= 1217.2 - (data*40);
+        x= 2609.72+data;
+        y= 1300 - (data*15);
 	}
 	if(joint=="cejaD"){
-	    x= data+2931.85;
-        y= 1231.58- (data*40);
+	    x= 2916.04-data;
+        y= 1300- (data*15);
 	}
 	if(joint=="altaD"){
-	    x= data+3157.42;
-        y= 1177.69- (data*50);
+	    x= 3113.22-data;
+        y= 1600- (data*70);
+        cout << "altaD-x: " << x <<endl;
+        cout << "altaD-y: " << y <<endl<<endl;
 	}
 	if(joint=="altaI"){
-	    x= data+2234.19;
-        y= 1175.85- (data*50);
+	    x= 2394.99+data;
+        y= 1600- (data*70);
+        //cout << "altaI-x: " << x<<endl;
+        //cout << "altaI-y: " << y<<endl<<endl;
 	}
 	if(joint=="nariz"){
 	    x= 2782.02;

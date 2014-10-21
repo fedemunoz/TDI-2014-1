@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Basura UY</title>
+
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <style>
+      html, body {
+        height: 90%;
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        background-color: #DFDADA;
+      }
+    </style>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+    <!-- SLIDER -->
+    <link href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+    <script src="js/jquery-ui-slider-pips.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-slider-pips.css">
+    <!-- FIN SLIDER -->
+
+
+
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+
+  </head>
+
+  <body>
+      <div class="col-md-10 column">
+
+        <div class="up">
+          <div class="col-md-1 column">
+            <div>
+                <img src="img/logo.png" width="100%"/>
+            </div>
+          </div>
+          <div class="col-md-7 column">
+            <div class="col-md-4 column">
+              <img src="img/ins1.png" width="120%" />
+            </div>
+            <div class="col-md-4 column">
+              <img src="img/ins2.png" width="120%" />
+            </div>
+            <div class="col-md-4 column">
+              <img src="img/ins3.png" width="120%" />
+            </div>
+          </div>
+
+          <div class="col-md-4 column">
+            <a href="#" id="select_latas" ><img src="img/latas.png" width="30%" /></img></a>
+            <a href="#" id="select_envases"><img src="img/envases.png" width="30%" /></img></a>
+            <a href="#" id="select_carton" ><img src="img/papel.png" width="30%" /></img></a>
+          </div>
+        </div>
+
+        <div class="middle">
+          <div class="col-md-4 column"  style="margin-top:2%">
+            <div class="time-div">
+              <span id="cant_dias" class="time-bar">TIEMPO: 1 DIA</span>
+            </div>
+              <div id="slider8" style="width:100%"></div>
+            <div id="show_pob" style="font-size:18px">POBLACION: 0</div>
+            <div id="divPoblacion"></div>
+          </div>
+          <div class="col-md-4 column" style="margin-top:3%">
+            <button id='submit' type="button" class="btn">Calcular basura!</button>
+            <button id='recicla' type="button" class="btn">Recicla!</button>
+          </div>  
+          <div class="col-md-4 column" style="min-height:120px;font-family: LatoLig;">
+            <div id='reciclandosillas'></div>
+            <div id='reciclandobombitas'></div>
+            <div id='reciclandoarboles'></div>
+          </div>
+        </div>
+          
+        <div class="down">
+          <div class="col-md-4 column">
+              <div id="map-canvas" class="map-div"></div>
+          </div>
+          <div class="col-md-8 column">
+			<div id="divImagenes"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-2 column">
+          <div id="gral-basura">
+              <div>
+                  <div>
+                      <img src="img/basura_total.png" width="100%"/>
+                      <div id="basura_total" style="width: 30%; margin: auto; font-size: 25px; font-family: LatoReg;"></div>
+                      <div class="center-img-side"> 
+                        <img src="img/pelotas-01.png" class="img-side"/>
+                      </div>
+                  </div>
+                  <div>
+                      <img src="img/basura_organica.png" width="100%"/>
+                      <div id="basura_organica" style="width: 30%; margin: auto; font-size: 25px; font-family: LatoReg;"></div>
+                       <div class="center-img-side">  
+                        <img src="img/pelotas-03.png" class="img-side"/>
+                      </div>
+                  </div>
+                  <div>
+                      <img src="img/compost.png" width="100%"/>
+                      <div id="compost" style="width: 30%; margin: auto; font-size: 25px; font-family: LatoReg;"></div>`
+                       <div class="center-img-side">  
+                        <img src="img/pelotas-02.png" class="img-side"/>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </body>
+
+  <script type="text/javascript">
+  var map, layer;
+  var pob;
+  var dias=1;
+
+function initialize() {
+  var mvdeo = new google.maps.LatLng(-34.862394, -56.168429);
+
+  map = new google.maps.Map(document.getElementById('map-canvas'), {
+    streetViewControl:false,
+    mapTypeControl:false,
+    center: mvdeo,
+    zoom: 12
+  });
+
+  layer = new google.maps.FusionTablesLayer({
+    map: map,
+    heatmap: { enabled: false },
+    query: {
+      select: "col3",
+      from: "1sQkwp2X-fEG6wzwiYcxt-x-ar-WyMRo_hRhbXOiw",
+      where: ""
+    },
+    options: {
+      styleId: 2,
+      templateId: 2
+    }
+  });
+
+  pob = 0;
+  var pob_manzana = 0;
+  var selected= [];
+  var clicked;
+
+  google.maps.event.addListener(layer, 'click', function(e) {
+    pob_manzana= e.row['TOT_POB'].value;
+    if(pob_manzana!=''){
+        clicked= e.row['CODCOMP'].value;
+
+        if(jQuery.inArray(clicked,selected) == -1){
+            pob= pob + parseInt(pob_manzana); 
+            selected[selected.length] = clicked;
+        }else{
+            pob= pob - parseInt(pob_manzana);
+            selected.splice($.inArray(clicked, selected),1);
+        }
+
+        $("#show_pob").text("POBLACION: " + pob);         
+            if(selected.length>0){      
+              layer.set("styles", [{
+                where: '\'CODCOMP\' IN (' + selected + ')',
+                polygonOptions: {
+                fillColor: "#f1c232",
+                fillOpacity: "0.8"
+                }
+              }]);
+            }else{
+              layer.set("styles", [{
+                where: '1',
+                polygonOptions: {
+                fillColor: "#f3f3f3",
+                fillOpacity: "0.01"
+                }
+              }]);
+            }
+      
+    }else{
+        layer.set("styles", [{
+            where: '\'CODCOMP\' IN (' + selected + ')',
+            polygonOptions: {
+            fillColor: "#f1c232",
+            fillOpacity: "0.8"
+            }
+          }]);
+         e.infoWindowHtml= 'asdsad';
+    }
+  
+  });
+
+
+function show_pob() {
+    dias= $("#slider8").slider("value");
+
+    var basura_total = document.getElementById('basura_total')
+    basura_total.innerHTML = (Math.round(pob*0.88) * dias) + " kg";
+    
+    var basura_organica = document.getElementById('basura_organica')
+    basura_organica.innerHTML = (Math.round(pob*0.88*0.4) * dias) + " kg";
+    
+    var compost = document.getElementById('compost')
+    compost.innerHTML = (Math.round(pob*0.88*0.4*0.3) * dias) + " kg";
+    
+    var envases = document.getElementById('reciclandobombitas')
+    envases.innerHTML = "Los envases generados son " + (Math.round(pob*0.1) * dias) + " kg";
+    
+    var latas = document.getElementById('reciclandosillas')
+    latas.innerHTML = "Las latas generadas son " + (Math.round(pob*0.04) * dias) + " kg";
+    latas.style.borderTop = "4px solid";
+    latas.style.paddingTop= "10px";
+
+    var papel = document.getElementById('reciclandoarboles')
+    papel.innerHTML = "El papel y el cartón generado es " + (Math.round(pob*0.12) * dias) + " kg";
+    papel.style.borderBottom = "4px solid";
+    papel.style.paddingBottom= "10px";
+
+    cantPer= Math.round(pob*0.04*dias/18);
+    cantJab= Math.round(pob*0.88*0.12*dias/100);
+    cantCab= Math.round(pob*0.1*dias/600);
+    cantCha= Math.round(pob*0.1*dias/80);
+    $("#reciclandosillas").append(" ("+cantPer+" perros)");
+    $("#reciclandoarboles").append(" ("+cantJab+" jabalíes)");
+
+    if(cantCab>0){
+        $("#reciclandobombitas").append(" ("+cantCab+" caballos)");
+    }else{
+        $("#reciclandobombitas").append(" ("+cantCha+" chanchos)");
+    }
+
+    mostrarAnimales("perro");
+    
+  }
+
+  function show_rec(){
+    dias= $("#slider8").slider("value");
+
+    var cant_latas = Math.round(pob*0.04*65) * dias;
+    reciclandosillas.innerHTML = "Reciclando las latas generadas se podrían producir " + cant_latas + " sillas";
+    $('#reciclandosillas').prepend('<img src="silla.png" alt="" alt="" height="25px"/>');
+
+    var cant_bombitas = Math.round(pob*0.1*35) * dias;
+    reciclandobombitas.innerHTML = "La energía utilizada para producir " + cant_bombitas + " envases, es igual al consumo de " + Math.round(cant_bombitas/5) + " de 200 watts por 4 horas";
+    $('#reciclandobombitas').prepend('<img src="bombita.png" alt="" alt="" height="25px"/>');
+
+    
+
+
+    var cant_arboles = Math.round(pob*0.1*17/1000) * dias;
+    reciclandoarboles.innerHTML = "Reciclando el papel y cartón generado se salvarían " + cant_arboles + " árboles";
+    $('#reciclandoarboles').prepend('<img src="arbol.png" alt="" alt="" height="25px"/>');
+    
+  }
+
+  var el = document.getElementById("submit");
+  el.onclick = show_pob;
+
+  var rec = document.getElementById("recicla");
+  rec.onclick = show_rec;
+  
+  }
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+      $("#slider8").slider({ max: 30, min: 1 });
+            
+      
+       $("#slider8").on("slidestop", function(event, ui) {
+          if($("#slider8").slider("value")==1){
+            $("#cant_dias").text('TIEMPO: 1 DIA');
+          }else{
+            $("#cant_dias").text("TIEMPO: "+ $("#slider8").slider("value")+' DIAS');
+          }
+      });
+
+	  
+	  function mostrarAnimales(a){
+              $("#divImagenes").html("");
+              var animal= a;
+            	var cant;
+                var position= $('#divImagenes').position();            	
+                var leftValue= position.left;
+                var topValue= position.top;
+                var zValue=1;
+                var id;
+            	var imageWidth;
+            	var imageHeight;
+
+                if(animal=='perro'){
+                    cant= Math.round(pob*0.04*dias/18);
+                }else if(animal=='jabali'){
+                    cant= Math.round(pob*0.88*0.12*dias/100);
+                }else if(animal=='caballo'){
+                    cant= Math.round(pob*0.1*dias/600);
+                }else if(animal=='chancho'){
+                    cant= Math.round(pob*0.1*dias/80);
+                }
+
+                for ( var i = 0; i < cant; i++ ) {
+                    id=animal.concat(i);
+                    
+                    if(animal=='perro'){
+                        $('#divImagenes').append('<img id=' + id + ' src="'+animal+'.png" alt="" alt="" height="100px"/>');
+                  			imageWidth=171;
+                  			imageHeight=100;
+                    }else if(animal=='jabali'){
+                        $('#divImagenes').append('<img id=' + id + ' src="'+animal+'.png" alt="" alt="" height="140px"/>');
+                        imageWidth=170;
+                        imageHeight=140;
+                    }else if(animal=='caballo'){
+                        $('#divImagenes').append('<img id=' + id + ' src="'+animal+'.png" alt="" alt="" height="200px"/>');
+                  			imageWidth=255;
+                  			imageHeight=300;
+                    }else if(animal=='chancho'){
+                        $('#divImagenes').append('<img id=' + id + ' src="'+animal+'.png" alt="" alt="" height="140px"/>');
+                        imageWidth=192;
+                        imageHeight=140;
+                    }
+            		
+
+                    if(leftValue + imageWidth> ($('#divImagenes').width()+position.left)){
+                        leftValue= position.left;
+                    }
+                    if(topValue + imageHeight> ($('#divImagenes').height()+position.top)){
+                        topValue= position.top;
+                    }
+                    if(topValue< (position.top)){
+                        topValue= position.top;
+                    }
+
+            		$('#'+id).css({'left': leftValue , 'top': topValue, 'z-index': zValue, 'position':'absolute'}); 
+            		if(zValue%4 == 0){
+                        $('#'+id).addClass('mirror');
+                    }
+            		
+                    if(animal=='perro'){
+                        leftValue= leftValue+ 50;      
+                        if(zValue%4 == 0){
+                            topValue= topValue- 120;      
+                        }else if(zValue%3 == 0){    
+                            topValue= topValue+ 60;                  
+                        }else if(zValue%2 == 0){    
+                            topValue= topValue- 80;                  
+                        }else{    
+                            topValue= topValue+ 100;                  
+                        }
+                        
+                    }else if(animal=='jabali'){
+                        leftValue= leftValue+ 75;      
+                        if(zValue%4 == 0){
+                            topValue= topValue- 180;      
+                        }else if(zValue%3 == 0){    
+                            topValue= topValue+ 90;                  
+                        }else if(zValue%2 == 0){    
+                            topValue= topValue- 120;                  
+                        }else{    
+                            topValue= topValue+ 150;                  
+                        }
+
+                    }else if(animal=='caballo'){
+                        leftValue= leftValue+ 75;      
+                        if(zValue%4 == 0){
+                            topValue= topValue- 180;      
+                        }else if(zValue%3 == 0){    
+                            topValue= topValue+ 90;                  
+                        }else if(zValue%2 == 0){    
+                            topValue= topValue- 120;                  
+                        }else{    
+                            topValue= topValue+ 150;                  
+                        }
+                    }else if(animal=='chancho'){
+                        leftValue= leftValue+ 75;      
+                        if(zValue%4 == 0){
+                            topValue= topValue- 180;      
+                        }else if(zValue%3 == 0){    
+                            topValue= topValue+ 90;                  
+                        }else if(zValue%2 == 0){    
+                            topValue= topValue- 120;                  
+                        }else{    
+                            topValue= topValue+ 150;                  
+                        }
+                    }
+
+                    zValue= zValue+1; 					
+
+            }
+}
+
+$("#select_latas").click(function(){
+    var animal= "perro";
+    mostrarAnimales(animal);
+});
+$("#select_envases").click(function(){
+    cant= Math.round(pob*0.1*dias/600);
+    if(cant>0){
+      var animal= "caballo";
+    }else{
+      var animal= "chancho";
+    }
+    mostrarAnimales(animal);
+});
+$("#select_carton").click(function(){
+    var animal= "jabali";
+    mostrarAnimales(animal);
+});
+
+  </script>
+
+</html>
